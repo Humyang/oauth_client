@@ -1,4 +1,4 @@
 module.exports = {
-    dbname:'OAUTH_CENTER',
+    dbname:'OAUTH_CLIENT',
     port:8100
 }

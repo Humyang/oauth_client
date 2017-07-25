@@ -35,7 +35,7 @@ async function fetchToeknStatus(token){
 		  	data = chunk
 		  });
 		  res.on('end', () => {
-		  	reslove(data)
+		  	reslove(JSON.parse(data))
 		  });
 		});
 
@@ -56,6 +56,7 @@ async function oauth_client(ctx,next){
 
 	// 调用 oauth_server 的接口验证 tokenA 状态
 	let tokenA_verify = await fetchToeknStatus(tokenA)
+	console.log(tokenA_verify)
 	// console.log(tokenA_verify)
 
 	let tokenB = uid(40)
@@ -73,7 +74,7 @@ async function oauth_client(ctx,next){
                     .insert(obj)
 
 	
-
+                    debugger
 	// 返回tokenB给前端
 	ctx.body={
 		status:true,
