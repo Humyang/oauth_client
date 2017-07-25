@@ -1,26 +1,31 @@
 var uid = require('uid')
 var mongo = require('koa-mongo')
 const http = require('http');
+var CONFIG = require('./config.js')
+
+var querystring = require('querystring').encode
+
 
 let _OAUTH_SERVER = {
-	url:'118.89.19.201'
-	port:8100,
+	url:'localhost',
+	port:3000,
 	path:'/token_verify'
 }
 let _dbname_login_status = 'OAUTH_CLIENT_LOGINED_STATUS'
 
 async function fetchToeknStatus(token){
-	return new Promise(function(reject,reslove){
-		const postData = JSON.stringify({
+	return new Promise(function(reslove,reject){
+		const body = JSON.stringify({
 		  'token': token
 		});
 		const options = {
 		  hostname: _OAUTH_SERVER.url,
 		  port: _OAUTH_SERVER.port,
 		  path: _OAUTH_SERVER.path,
-		  method: 'GET',
+		  method: 'POST',
 		  headers: {
-		    'Content-Type': 'application/json'
+		    'Content-Type': 'application/json',
+		    "Content-Length": Buffer.byteLength(body)
 		  }
 		};
 		const req = http.request(options, (res) => {
@@ -37,19 +42,21 @@ async function fetchToeknStatus(token){
 		req.on('error', (e) => {
 			reject(e.message)
 		});
-
-		req.write(postData);
-		req.end();
+		// let b = new formData()
+		// req.write(postData);
+		// debugger
+		req.end(body);
 	})
 }
 
 async function oauth_client(ctx,next){
-
+	// debugger
 	//来自oauth_server的tokenA
-	let tokenA = ctx.request.fields.tokenA
+	let tokenA = ctx.request.fields.token
 
 	// 调用 oauth_server 的接口验证 tokenA 状态
 	let tokenA_verify = await fetchToeknStatus(tokenA)
+	// console.log(tokenA_verify)
 
 	let tokenB = uid(40)
 
@@ -63,14 +70,16 @@ async function oauth_client(ctx,next){
 	let _insert_res = await ctx.mongo
                     .db(CONFIG.dbname)
                     .collection(_dbname_login_status)
-                    .insert(_token_stauts)
+                    .insert(obj)
 
 	
 
 	// 返回tokenB给前端
-	ctx.bdoy={
+	ctx.body={
 		status:true,
-		token:tokenB
+		token:tokenB,
+		username:tokenA_verify.username,
+		uid:tokenA_verify.uid
 	}
 }
 
