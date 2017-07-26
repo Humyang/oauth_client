@@ -35,33 +35,33 @@ const http = require('http');
 
 
 const body = JSON.stringify({
-      'token': '123333'
-    });
-    const options = {
-      hostname: 'localhost',
-      port: 3000,
-      path: '/token_verify',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        "Content-Length": Buffer.byteLength(body)
-      }
-    };
-    const req = http.request(options, (res) => {
-      let data = ''
-      res.setEncoding('utf8');
-      res.on('data', (chunk) => {
-        // data = chunk
-        console.log(chunk)
-      });
-      res.on('end', () => {
-        // console.log(123)
-      });
-    });
+  'token': '123333'
+});
+const options = {
+  hostname: 'localhost',
+  port: 3000,
+  path: '/token_verify',
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    "Content-Length": Buffer.byteLength(body)
+  }
+};
+const req = http.request(options, (res) => {
+  let data = ''
+  res.setEncoding('utf8');
+  res.on('data', (chunk) => {
+    // data = chunk
+    console.log(chunk)
+  });
+  res.on('end', () => {
+    // console.log(123)
+  });
+});
 
-    req.on('error', (e) => {
-      // reject(e.message)
-    });
-    // let postData = new formData()
-    // req.write(postData);
-    req.end(body);
+req.on('error', (e) => {
+  // reject(e.message)
+});
+// let postData = new formData()
+// req.write(postData);
+req.end(body);
