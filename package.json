@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "koa-mongo": "^1.2.1",
-    "uid": "0.0.2"
+    "uid": "0.0.2",
+    "uid2": "0.0.3"
   }
 }
